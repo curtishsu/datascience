@@ -512,5 +512,90 @@ slope, constant, z = linear_reg_fit(dataset_1_full)
 residuals(dataset_1_full, slope, constant)
 
 
+###Challenge Problem
+#Explore the distribution of random variables that result from combining other random variables
+#Create a function that intakes k, which is the number of variables you wish to add (I.e. k = 2 means you have x_1&x_2)
+def generate_uniform(k):
 
+    #Create a list to store x values
+    x_list = []
+    
+    #Create K lists, with each list having 1000000 random numbers, uniformally distributed from 0 to 1
+    for i in xrange(0,k):
+        x = np.random.uniform(0,1,10000000)
+        x_list.append(x)
+        
+    #Create Z-list, which is a list of the sums of all the x lists. 
+    z_list = x_list[0]
+    for i in xrange(1,k):
+        z_list = z_list + x_list[i]
+        
+    #Plot Z_list
+    plt.hist(z_list, bins=100)
+    plt.suptitle("Histogram of Z values, Bins = 100, Variable: k = " + str(k))
+    plt.xlabel('Z-Values')
+    plt.ylabel('Y-Values')
+    plt.show()
+    
+generate_uniform(2)
 
+#Using the function defined above, create histograms with either 3, 10, or 12 x varibles. 
+ax1 = generate_uniform(3)
+ax2 = generate_uniform(10)
+ax3 = generate_uniform(12)
+plt.show()
+
+#Repeat the process that was taken in part (a). This time , however, use a normal distribution instead of random. 
+def generate_normal(k):    
+    x_list = []
+    for i in xrange(0,k):
+        x = "x_" + str(i)
+        x = np.random.normal(0,1,10000000)
+        x_list.append(x)
+    z_list = x_list[0]
+    for i in xrange(1,k):
+        z_list = z_list + x_list[i]
+    
+    #Find the standard deviation and mean of the list 
+    std = round(np.std(z_list),3)
+    mean = round(np.mean(z_list),1)
+    
+    #Plot the list
+    plt.hist(z_list, bins=100)
+    plt.suptitle("Histogram of Z values, Bins = 100, Variable: k = " + str(k))
+    plt.xlabel('Z-Values')
+    plt.ylabel('Y-Values')
+    print "The mean of Z is " + str(mean) + " and the standard deviation is " + str(std)
+    
+    plt.show()
+    
+generate_normal(2)
+
+#Create a function that will multiple all k of the lists of x's
+def generate_product(k):    
+    x_list = []
+    for i in xrange(0,k):
+        x = "x_" + str(i)
+        x = np.random.normal(0,1,1000000)
+        x_list.append(x)
+    z_list = x_list[0]
+    for i in xrange(1,k):
+        z_list = x_list[i] * z_list
+    
+    #Find the standard deviation, mean, and test to see if the distribution is normal
+    std = round(np.std(z_list),3)
+    mean = round(np.mean(z_list),1)
+    normal_test = scipy.stats.mstats.normaltest(z_list)
+    
+    #Plot the histogram, as well as a normal curve for comparison
+    plt.hist(z_list, bins=100)
+    plt.suptitle("Histogram of Z values, Bins = 100, Variable: k = " + str(k))
+    plt.xlabel('Z-Values')
+    plt.ylabel('Y-Values')
+    plt.plot(x,mlab.normpdf(x, 0, 1))
+    plt.show()
+    
+    print "The mean of Z is " + str(mean) + " and the standard deviation is " + str(std)
+    print normal_test
+    
+generate_product(2)
